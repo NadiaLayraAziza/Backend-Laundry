@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -13,7 +14,8 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        //
+        $data = Kategori::latest()->get();
+        return response()->json([($data), 'Data fetched.']);
     }
 
     /**
@@ -34,7 +36,13 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = Kategori::create([
+            'laundry_id' => $request->laundry_id,
+            'jenis' => $request->jenis,
+            'hargakg' => $request->hargakg,
+         ]);
+
+        return response()->json(['Data created successfully.', ($data)]);
     }
 
     /**
@@ -45,7 +53,11 @@ class KategoriController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Kategori::find($id);
+        if (is_null($data)) {
+            return response()->json('Data not found', 404);
+        }
+        return response()->json([($data)]);
     }
 
     /**
@@ -66,9 +78,12 @@ class KategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Kategori $kategori)
     {
-        //
+        $kategori->hargakg = $request->hargakg;
+        $kategori->save();
+
+        return response()->json(['Data updated successfully.', ($kategori)]);
     }
 
     /**
@@ -77,8 +92,9 @@ class KategoriController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Kategori $kategori)
     {
-        //
+        $kategori->delete();
+        return response()->json('Data deleted successfully');
     }
 }

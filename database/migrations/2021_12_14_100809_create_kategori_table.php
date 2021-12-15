@@ -18,7 +18,7 @@ class CreateKategoriTable extends Migration
             $table->unsignedInteger('laundry_id');
             $table->foreign('laundry_id')->references('id')->on('laundry');
             $table->string('jenis');
-            $table->string('harga/kg');
+            $table->string('hargakg');
             $table->timestamps();
         });
     }
