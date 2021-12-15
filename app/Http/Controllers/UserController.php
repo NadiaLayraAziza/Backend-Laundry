@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,7 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $data = User::latest()->get();
+        return response()->json([($data), 'Data fetched.']);
     }
 
     /**
@@ -34,7 +36,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = User::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => $request->password,
+            'telepon' => $request->telepon,
+            'alamat' => $request->alamat,
+            'role' => $request->role,
+         ]);
+
+        return response()->json(['Data created successfully.', ($data)]);
     }
 
     /**
@@ -45,7 +57,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = User::find($id);
+        if (is_null($data)) {
+            return response()->json('Data not found', 404);
+        }
+        return response()->json([($data)]);
     }
 
     /**
@@ -66,9 +82,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $user->nama = $request->nama;
+        $user->email = $request->email;
+        $user->username = $request->username;
+        $user->password = $request->password;
+        $user->telepon = $request->telepon;
+        $user->alamat = $request->alamat;
+        $user->role = $request->role;
+        $user->save();
+
+        return response()->json(['Data updated successfully.', ($user)]);
     }
 
     /**
@@ -77,8 +102,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return response()->json('Data deleted successfully');
     }
 }
