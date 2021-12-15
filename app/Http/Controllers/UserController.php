@@ -43,7 +43,7 @@ class UserController extends Controller
             'password' => $request->password,
             'telepon' => $request->telepon,
             'alamat' => $request->alamat,
-            'role' => $request->role,
+            'role' => $request->role
          ]);
 
         return response()->json(['Data created successfully.', ($data)]);

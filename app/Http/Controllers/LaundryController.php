@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Laundry;
 use Illuminate\Http\Request;
 
 class LaundryController extends Controller
@@ -13,7 +14,8 @@ class LaundryController extends Controller
      */
     public function index()
     {
-        //
+        $data = Laundry::latest()->get();
+        return response()->json([($data), 'Data fetched.']);
     }
 
     /**
@@ -34,7 +36,12 @@ class LaundryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = Laundry::create([
+            'user_id' => $request->user_id,
+            'nama_laundry' => $request->nama_laundry
+         ]);
+
+        return response()->json(['Data created successfully.', ($data)]);
     }
 
     /**
@@ -45,7 +52,11 @@ class LaundryController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Laundry::find($id);
+        if (is_null($data)) {
+            return response()->json('Data not found', 404);
+        }
+        return response()->json([($data)]);
     }
 
     /**
@@ -66,9 +77,12 @@ class LaundryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Laundry $laundry)
     {
-        //
+        $laundry->nama_laundry = $request->nama_laundry;
+        $laundry->save();
+
+        return response()->json(['Data updated successfully.', ($laundry)]);
     }
 
     /**
@@ -77,8 +91,9 @@ class LaundryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Laundry $laundry)
     {
-        //
+        $laundry->delete();
+        return response()->json('Data deleted successfully');
     }
 }
